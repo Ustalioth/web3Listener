@@ -12,13 +12,11 @@ contract CollectEverything {
     function pay(address payable merchantAddress) public payable {
         uint amount = msg.value;
 
-        uint merchantAmount = amount * ((100 - feesPercentage) / 100);
+        uint256 collectEverythingAmount = (amount * 5) / 100;
+        uint256 merchantAmount = amount - collectEverythingAmount;
 
-        transfer(merchantAddress, merchantAmount);
-
-        uint collectEverythingAmount = address(this).balance;
-
-        transfer(payable(collectEverythingAddress), collectEverythingAmount);
+        payable(collectEverythingAddress).transfer(collectEverythingAmount);
+        merchantAddress.transfer(merchantAmount);
 
         emit PaymentReceived(msg.sender, msg.value, merchantAddress);
     }
@@ -28,3 +26,4 @@ contract CollectEverything {
         recipient.transfer(amount);
     }
 }
+
